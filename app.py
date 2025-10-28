@@ -26,7 +26,11 @@ def makeplot(data, gtype):
     plt.show()
 
 if __name__ == '__main__':
-    csv = input("Enter csv file\n")
-    gtype = input("Enter gtype, scatter, line, bar, hist\n")
+    while True:
+        csv = input("Enter csv file\n")
 
-    makeplot(csv, gtype)
+        if csv == 'quit':
+            break
+
+        gtype = input("Enter gtype, scatter, line, bar, hist\n")
+        makeplot(csv, gtype)
