@@ -10,18 +10,35 @@ def makeplot(data, gtype):
     if data == 'combined_cf.csv' or data == 'fuel_coldflow.csv':
         y = 'Pressure'
 
-    match gtype:
-        case 'scatter':
-            sns.scatterplot(x=x, y=y, data=df)
-        case 'line':
-            sns.lineplot(x=x, y=y, data=df)
-        case 'bar':
-            sns.barplot(x=x, y=y, data=df)
-        case 'hist':
-            sns.histplot(x=x, y=y, data=df)
-        case _:
-            print("Invalid gtype")
-
+    # Get unique sensors
+    sensors = df['Sensor'].unique()
+    
+    # Create a figure with subplots for each sensor
+    fig, axes = plt.subplots(len(sensors), 1, figsize=(10, 4 * len(sensors)))
+    
+    # Handle single sensor case
+    if len(sensors) == 1:
+        axes = [axes]
+    
+    # Plot each sensor separately
+    for idx, sensor in enumerate(sensors):
+        sensor_data = df[df['Sensor'] == sensor]
+        
+        match gtype:
+            case 'scatter':
+                sns.scatterplot(x=x, y=y, data=sensor_data, ax=axes[idx])
+            case 'line':
+                sns.lineplot(x=x, y=y, data=sensor_data, ax=axes[idx])
+            case 'bar':
+                sns.barplot(x=x, y=y, data=sensor_data, ax=axes[idx])
+            case 'hist':
+                sns.histplot(x=x, y=y, data=sensor_data, ax=axes[idx])
+            case _:
+                print("Invalid gtype")
+        
+        axes[idx].set_title(f'{sensor}')
+    
+    plt.tight_layout()
     plt.draw()
     plt.show()
 
